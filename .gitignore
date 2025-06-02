@@ -3,3 +3,5 @@ DeepCDR/exp_result/
 DeepCDR/mc_dropout_exp_results/
 DeepCDR/.ipynb_checkpoints/
 DeepCDR/bootstrap_results_all/
+DeepCDR/NNe_model/
+DeepCDR/bootstrap_inference/
