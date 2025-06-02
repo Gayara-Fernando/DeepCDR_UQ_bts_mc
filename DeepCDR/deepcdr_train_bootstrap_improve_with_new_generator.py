@@ -210,7 +210,7 @@ def run(params: Dict):
     ############ What happens inside the for loop? #####################
 
     B = 10
-    for i in range(B+1):
+    for i in range(B):
     
         # define the model
         training = False
