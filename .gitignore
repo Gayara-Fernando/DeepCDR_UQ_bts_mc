@@ -1,3 +1,5 @@
 DeepCDR/csa_data/
 DeepCDR/exp_result/
 DeepCDR/mc_dropout_exp_results/
+DeepCDR/.ipynb_checkpoints/
+DeepCDR/bootstrap_results_all/
