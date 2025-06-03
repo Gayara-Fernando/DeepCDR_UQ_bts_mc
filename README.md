@@ -35,3 +35,6 @@ This will:
 2. Clone IMPROVE repo (checkout `develop`) outside the DeepCDR model repo.
 3. Set up env variables: `IMPROVE_DATA_DIR` (to `./csa_data/`) and `PYTHONPATH` (adds IMPROVE repo).
 
+### Uncertainty quantification with Bootstrap Confidence Intervals
+
+For creating the confidence intervals (CIs) for uncertainty quantification, we use the method suggested by .... For a more straightforward explanation, refer to section II of the paper "Constructing Optimal Prediction Intervals by Using Neural Networks and Bootstrap Method" https://ieeexplore.ieee.org/document/6895153 by Khosravi et al.
