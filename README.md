@@ -37,7 +37,7 @@ This will:
 
 ### Uncertainty quantification with Bootstrap Confidence Intervals
 
-For creating the confidence intervals (CIs) for uncertainty quantification, we use the method suggested by .... For a more straightforward explanation, refer to section II of the paper "Constructing Optimal Prediction Intervals by Using Neural Networks and Bootstrap Method" https://ieeexplore.ieee.org/document/6895153 by Khosravi et al. (2014). Two aspects of prediction intervals (PIs) make them highly informative and valuable for analysis and decision-making. First, wider PIs indicate less reliable predicted values, meaning they should be used with caution. This suggests a high degree of uncertainty in the data, which cannot be entirely removed from the prediction process. Second, PIs are associated with a confidence level, which provides an indication of their accuracy. The scripts (mainly inference) follow the steps in Section II of the above-mentioned Khosvari et al. (2014) work in computing the prediction intervals and thereby the two aspects, the confidence interval width and coverage. To implement the PIs, run the following three scripts.
+For creating the confidence intervals (CIs) for uncertainty quantification, we use the method suggested by Heskes (1997 - https://proceedings.neurips.cc/paper_files/paper/1996/file/7940ab47468396569a906f75ff3f20ef-Paper.pdf). For a more straightforward explanation, refer to section II of the paper "Constructing Optimal Prediction Intervals by Using Neural Networks and Bootstrap Method" https://ieeexplore.ieee.org/document/6895153 by Khosravi et al. (2014). Two aspects of prediction intervals (PIs) make them highly informative and valuable for analysis and decision-making. First, wider PIs indicate less reliable predicted values, meaning they should be used with caution. This suggests a high degree of uncertainty in the data, which cannot be entirely removed from the prediction process. Second, PIs are associated with a confidence level, which provides an indication of their accuracy. The scripts (mainly inference) follow the steps in Section II of the above-mentioned Khosvari et al. (2014) work in computing the prediction intervals and thereby the two aspects, the confidence interval width and coverage. To implement the PIs, run the following three scripts.
 
 #### 1. Preprocessing script
 ```
@@ -118,6 +118,94 @@ bootstrap_inference
 NNe_model
 ```
 The widths and the coverages of the prediction intervals will get stored in the json file "CI_information_bootstraps.json".
+
+### Uncertainty quantification with Dropout-induced Confidence Intervals with Monte-Carlo Dropout.
+
+MC-dropout introduced as an approximation to Bayesian neural networks by Gal et al. (2015) (https://arxiv.org/abs/1506.02142) was used for this implementation. The dorpouts are activated during inference phase (for some layers connected to the prediction head). To implement this work, run the following on the command line.
+#### 1. Preprocessing script
+```
+python deepcdr_preprocess_improve.py --input_dir ./csa_data/raw_data --output_dir mc_dropout_exp_results
+```
+Preprocesses the CSA data and creates train, validation (val), and test datasets.
+
+This command generates the following folder:
+
+* five model input data files: `cancer_dna_methy_model`, `cancer_gen_expr_model`, `cancer_gen_mut_model`, `drug_features.pickle`, `norm_adj_mat.pickle`
+* three tabular data files, each containing the drug response values (i.e. AUC) and corresponding metadata: `train_y_data.csv`, `val_y_data.csv`, `test_y_data.csv`
+
+```
+mc_dropout_exp_results
+ ├── param_log_file.txt
+ ├── cancer_dna_methy_model
+ ├── cancer_gen_expr_model
+ ├── cancer_gen_mut_model
+ ├── test_y_data.csv
+ ├── train_y_data.csv
+ ├── val_y_data.csv
+ ├── drug_features.pickle
+ └── norm_adj_mat.pickle
+```
+Notice there is no change in the preprocess script. Only the location of the output directory was changed.
+
+#### 2. Training script
+
+This work currently uses 25 predictions per test sample, but this number can be changed by adjusting the range in line 189 to the number of predictions we need in the script "deepcdr_infer_mcdropout_improve.py".
+
+To execute the train script, run the following.
+
+```
+python deepcdr_train_mcdropout_improve.py --input_dir mc_dropout_exp_results --output_dir mc_dropout_exp_results
+```
+Generates:
+* trained model: `DeepCDR_model`
+* predictions on val data (tabular data): `val_y_data_predicted.csv`
+* prediction performance scores on val data: `val_scores.json`
+```
+mc_dropout_exp_results
+ ├── param_log_file.txt
+ ├── cancer_dna_methy_model
+ ├── cancer_gen_expr_model
+ ├── cancer_gen_mut_model
+ ├── test_y_data.csv
+ ├── train_y_data.csv
+ ├── val_y_data.csv
+ ├── drug_features.pickle
+ ├── norm_adj_mat.pickle
+ ├── DeepCDR_model
+ ├── val_scores.json
+ └── val_y_data_predicted.csv
+```
+
+
+#### 3. Inference script
+
+To get the performance metrics for the averaged predictions, and the coverages and the widths of the prediction intervals, run the following command.
+
+```
+python deepcdr_infer_mcdropout_improve.py --input_data_dir mc_dropout_exp_results --input_model_dir mc_dropout_exp_results --output_dir mc_dropout_exp_results --calc_infer_score true
+```
+
+Generates:
+* Averaged predictions on test data (tabular data): `test_y_data_predicted.csv`
+* prediction performance scores on test data: `test_scores.json`
+* CI information from the MC-dropout method
+```
+mc_dropout_exp_results
+ ├── param_log_file.txt
+ ├── cancer_dna_methy_model
+ ├── cancer_gen_expr_model
+ ├── cancer_gen_mut_model
+ ├── test_y_data.csv
+ ├── train_y_data.csv
+ ├── val_y_data.csv
+ ├── drug_features.pickle
+ ├── norm_adj_mat.pickle
+ ├── DeepCDR_model
+ ├── val_scores.json
+ ├── val_y_data_predicted.csv
+ ├── test_scores.json
+ ├──mc_dropout_exp_results.json
+ └── test_y_data_predicted.csv
 
 
 
