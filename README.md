@@ -37,4 +37,38 @@ This will:
 
 ### Uncertainty quantification with Bootstrap Confidence Intervals
 
-For creating the confidence intervals (CIs) for uncertainty quantification, we use the method suggested by .... For a more straightforward explanation, refer to section II of the paper "Constructing Optimal Prediction Intervals by Using Neural Networks and Bootstrap Method" https://ieeexplore.ieee.org/document/6895153 by Khosravi et al.
+For creating the confidence intervals (CIs) for uncertainty quantification, we use the method suggested by .... For a more straightforward explanation, refer to section II of the paper "Constructing Optimal Prediction Intervals by Using Neural Networks and Bootstrap Method" https://ieeexplore.ieee.org/document/6895153 by Khosravi et al. (2014). Two aspects of prediction intervals (PIs) make them highly informative and valuable for analysis and decision-making. First, wider PIs indicate less reliable predicted values, meaning they should be used with caution. This suggests a high degree of uncertainty in the data, which cannot be entirely removed from the prediction process. Second, PIs are associated with a confidence level, which provides an indication of their accuracy. The scripts (mainly inference) follow the steps in Section II of the above-mentioned Khosvari et al. (2014) work in computing the prediction intervals and thereby the two aspects, the confidence interval width and coverage. To implement the PIs, run the following three scripts.
+
+#### 1. Preprocessing script
+```
+python deepcdr_preprocess_improve.py --input_dir ./csa_data/raw_data --output_dir exp_result
+```
+Preprocesses the CSA data and creates train, validation (val), and test datasets.
+
+This command generates the following folder:
+
+* five model input data files: `cancer_dna_methy_model`, `cancer_gen_expr_model`, `cancer_gen_mut_model`, `drug_features.pickle`, `norm_adj_mat.pickle`
+* three tabular data files, each containing the drug response values (i.e. AUC) and corresponding metadata: `train_y_data.csv`, `val_y_data.csv`, `test_y_data.csv`
+
+```
+exp_result
+ ├── param_log_file.txt
+ ├── cancer_dna_methy_model
+ ├── cancer_gen_expr_model
+ ├── cancer_gen_mut_model
+ ├── test_y_data.csv
+ ├── train_y_data.csv
+ ├── val_y_data.csv
+ ├── drug_features.pickle
+ └── norm_adj_mat.pickle
+```
+
+#### 2. Training script
+
+Since bootstraps involve sampling with replacement, a new generator function was written to implement this in the DeepCDR model. This new generator is in the Python script "New_data_generator_with_tf.py". There are 10 bootstrap samples (therefore 10 models) trained in the train script, and the prediction intervals are computed using the predictions from all these 10 models. This number can be changed by changing the value of parameter B in the script "deepcdr_train_bootstrap_improve_with_new_generator.py" (line 212). 
+
+
+
+
+
+
