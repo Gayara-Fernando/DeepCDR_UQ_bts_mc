@@ -65,10 +65,46 @@ exp_result
 
 #### 2. Training script
 
-Since bootstraps involve sampling with replacement, a new generator function was written to implement this in the DeepCDR model. This new generator is in the Python script "New_data_generator_with_tf.py". There are 10 bootstrap samples (therefore 10 models) trained in the train script, and the prediction intervals are computed using the predictions from all these 10 models. This number can be changed by changing the value of parameter B in the script "deepcdr_train_bootstrap_improve_with_new_generator.py" (line 212). 
+Since bootstraps involve sampling with replacement, a new generator function was written to implement this in the DeepCDR model. This new generator is in the Python script "New_data_generator_with_tf.py". There are 10 bootstrap samples (therefore 10 models) trained in the train script, and the prediction intervals are computed using the predictions from all these 10 models. This number can be changed by changing the value of parameter B in the script "deepcdr_train_bootstrap_improve_with_new_generator.py" (line 212). To execute the train script, run the following.
 
+```
+python deepcdr_train_bootstrap_improve_with_new_generator.py --input_dir exp_result
+```
 
+This generates the following content in a folder named "bootsrtrap_results_all".
 
+```
+bootstrap_results_all
 
+ ├── bootstrap_1
+ 
+      └── DeepCDR_model
+
+      └── val_scores.json
+    
+      └── val_y_data_predicted.csv
+ 
+ ├── bootstrap_2
+ 
+      └── DeepCDR_model
+
+      └── val_scores.json
+
+      └── val_y_data_predicted.csv
+ 
+.
+
+.
+
+.
+ 
+ ├── bootstrap_10
+ 
+      └── DeepCDR_model
+
+      └── val_scores.json
+
+      └── val_y_data_predicted.csv
+```
 
 
