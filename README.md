@@ -204,7 +204,7 @@ mc_dropout_exp_results
  ├── val_scores.json
  ├── val_y_data_predicted.csv
  ├── test_scores.json
- ├──mc_dropout_exp_results.json
+ ├── CI_information_mc_dropout.json
  └── test_y_data_predicted.csv
 
 
