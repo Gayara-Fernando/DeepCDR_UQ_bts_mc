@@ -75,21 +75,13 @@ This generates the following content in a folder named "bootsrtrap_results_all".
 
 ```
 bootstrap_results_all
-
  ├── bootstrap_1
- 
       └── DeepCDR_model
-
       └── val_scores.json
-    
       └── val_y_data_predicted.csv
- 
  ├── bootstrap_2
- 
       └── DeepCDR_model
-
       └── val_scores.json
-
       └── val_y_data_predicted.csv
  
 .
@@ -99,12 +91,34 @@ bootstrap_results_all
 .
  
  ├── bootstrap_10
- 
       └── DeepCDR_model
-
       └── val_scores.json
-
       └── val_y_data_predicted.csv
 ```
+Note that each bootstrap model is stored inside the DeepCDR_model folder.
+
+#### 3. Inference script
+
+To get the performance metrics for the averaged predictions, and the coverages and the widths of the prediction intervals, run the following command.
+
+```
+python deepcdr_infer_bootstrap_improve_with_new_generator.py --input_data_dir exp_result --input_model_dir bootstrap_results_all --output_dir bootstrap_inference --calc_infer_score true
+```
+
+This contentent from this are the two folders bootstrap_inference and NNe_model, as follows.
+
+```
+bootstrap_inference
+
+    └── param_log_file.txt
+    └── test_scores.json
+    └── CI_information_bootstraps.json
+    └── test_y_data_predicted.csv
+
+NNe_model
+```
+The widths and the coverages of the prediction intervals will get stored in the json file "CI_information_bootstraps.json".
+
+
 
 
